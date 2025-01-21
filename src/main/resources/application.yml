@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: transaction
+  jpa:
+    properties:
+      open-in-view: true
+      hibernate:
+        ddl-auto: create-drop
+        jdbc:
+          batch_size: 100
+          batch_versioned_data: true
+        order_inserts: true
+        order_updates: true
+      show-sql: true
+      h2:
+        console:
+          enabled: true
+application:
+  infra:
+    utils:
+      snowflake:
+          data-center: 1
+          worker: 1
+    cache:
+      cache-size: 1000
+      ttl-minutes: 6000
+server:
+  port: 8000
