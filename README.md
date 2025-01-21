@@ -1,5 +1,7 @@
 # Transaction_Home_Task
 
+[中文版](README_zh_CN.md)
+
 ## Features
 * Transaction Service with CRUD (w/ Batch) APIs
 * Domain-driven-design style structured project 
