@@ -1,5 +1,7 @@
 package moe.rtc.transaction.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -27,6 +29,7 @@ import java.util.stream.IntStream;
 @RestController
 @RequestMapping("transaction")
 @Log
+@Tag(name = "Transaction", description = "The transaction APIs.")
 public class TransactionController {
     private final TransactionService service;
 
@@ -49,6 +52,7 @@ public class TransactionController {
         return new ResponseEntity<>(randomDatas, HttpStatus.OK);
     }
 
+    @Operation(summary = "Create new transaction", description = "Create new transaction of specific transaction ID to the service")
     @PostMapping("/{id}")
     public ResponseEntity<BaseApiDataResponse<TransactionEntity>> create(@Valid @RequestBody TransactionCreateModel model, @PathVariable(value = "id") Long id) {
         return new ResponseEntity<>(new BaseApiDataResponse<>(
@@ -58,6 +62,7 @@ public class TransactionController {
                 HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Batch create new transaction", description = "Batch create new transaction to the service.")
     @PostMapping("/batchCreate")
     public ResponseEntity<BaseApiDataResponse<List<TransactionEntity>>> batchCreate(@Valid @RequestBody TransactionBatchCreateModel model) {
         return new ResponseEntity<>(new BaseApiDataResponse<>(
@@ -67,6 +72,7 @@ public class TransactionController {
                 HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Query transaction", description = "Query one specific transaction by transaction ID.")
     @GetMapping("/{id}")
     public ResponseEntity<BaseApiDataResponse<TransactionEntity>> queryOne(@PathVariable(value = "id") Long id) {
         TransactionEntity data = service.query(id);
@@ -75,6 +81,7 @@ public class TransactionController {
                HttpStatus.OK);
     }
 
+    @Operation(summary = "Paged query transaction", description = "Query transactions with condition and pagination.")
     @PostMapping("/pagedQuery")
     public ResponseEntity<BaseApiDataResponse<Page<List<TransactionEntity>>>> pagedQuery(
             @Valid @RequestBody TransactionPagedQueryModel model,
@@ -86,6 +93,7 @@ public class TransactionController {
                 HttpStatus.OK);
     }
 
+    @Operation(summary = "Update transaction", description = "Update one specific transaction by transaction ID.")
     @PutMapping("/{id}")
     public ResponseEntity<BaseApiDataResponse<TransactionEntity>> update(@PathVariable(value = "id") Long id, @Valid @RequestBody TransactionUpdateModel model) {
         TransactionEntity data = service.update(TransactionMapper.INSTANCE.updateModelToEntity(model, id));
@@ -94,6 +102,7 @@ public class TransactionController {
                 HttpStatus.OK);
     }
 
+    @Operation(summary = "Batch update transaction", description = "Update transactions with list of transaction datas.")
     @PostMapping("/batchUpdate")
     public ResponseEntity<BaseApiDataResponse<List<TransactionEntity>>> batchUpdate(@Valid @RequestBody TransactionBatchUpdateModel model) {
         List<TransactionEntity> data = service.update(TransactionMapper.INSTANCE.batchUpdateDataToEntity(model.getTransactions()));
@@ -102,7 +111,7 @@ public class TransactionController {
                 HttpStatus.OK);
     }
 
-
+    @Operation(summary = "Delete transaction", description = "Soft delete one specific transaction by transaction ID.")
     @DeleteMapping("/{id}")
     public ResponseEntity<BaseApiDataResponse<TransactionEntity>> delete(@PathVariable(value = "id") Long id) {
         TransactionEntity data = service.delete(id);
@@ -111,6 +120,7 @@ public class TransactionController {
                 HttpStatus.OK);
     }
 
+    @Operation(summary = "Batch delete transaction", description = "Soft delete transactions by transaction IDs.")
     @PostMapping("/batchDelete")
     public ResponseEntity<BaseApiDataResponse<List<TransactionEntity>>> batchDelete(@Valid @RequestBody TransactionBatchDeleteModel model) {
         List<TransactionEntity> data = service.delete(model.getIds());
