@@ -5,8 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.java.Log;
 import moe.rtc.transaction.controller.model.TransactionBatchCreateModel;
-import moe.rtc.transaction.controller.model.TransactionCreateModel;
 import moe.rtc.transaction.domain.transaction.TransactionEntity;
+import moe.rtc.transaction.infra.pagination.Page;
 import moe.rtc.transaction.infra.utils.Snowflake;
 import moe.rtc.transaction.infra.web.BaseApiDataResponse;
 import org.junit.jupiter.api.Test;
@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static moe.rtc.transaction.domain.transaction.enumation.TransactionType.DEPOSIT;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,9 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
-@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:test/TransactionControllerSingleTest.sql")
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:test/TransactionControllerBatchTest.sql")
 @Log
-public class TransactionBatchBenchTest {
+public class TransactionControllerBatchTest {
     @Autowired
     ObjectMapper om;
 
@@ -66,6 +67,19 @@ public class TransactionBatchBenchTest {
         }
         double cost = (System.nanoTime() - begin) / 1e9;
         log.info("createTransaction - time = " + cost);
+    }
+
+    @Test
+    public void queryTransaction() throws Exception {
+        TransactionBatchCreateModel model = new TransactionBatchCreateModel();
+        BaseApiDataResponse<Page<List<TransactionEntity>>> actual = om.readValue(mockMvc.perform(post("/transaction/pagedQuery?size=500&page=1")
+                        .contentType("application/json")
+                        .content(om.writeValueAsString(model)))
+                .andDo(print())
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), new TypeReference<>() {
+        });
+        Assert.equals(500, actual.getData().getPagedData().size());
+        Assert.equals(1000L, actual.getData().getTotalData());
     }
 
     public static BigDecimal randomNumber() {

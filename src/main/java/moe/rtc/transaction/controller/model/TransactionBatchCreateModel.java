@@ -27,5 +27,6 @@ public class TransactionBatchCreateModel {
 
         @NotNull(message = TransactionControllerErrorCodes.AMOUNT_IS_NULL)
         private BigDecimal amount;
+
     }
 }

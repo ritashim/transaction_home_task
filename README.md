@@ -28,9 +28,43 @@ Please also check out [Swagger-UI](http://localhost:8000/swagger-ui/index.html#/
 * Batch update transaction
 * Batch delete transaction
 
+## Deploy
+### Dependency
+* Docker
+
+### Packaging
+```sh
+mvn install
+```
+
+### Run
+```sh
+docker run -p 8000:8000 transaction:0.0.1-SNAPSHOT
+```
+
+## Dependency
+* Spring
+  * Spring Boot Starter Web
+  * Validation
+  * Cache
+  * JPA
+  * Test
+* Persistence
+  * H2
+  * QueryDsl
+* Caching
+  * Caffeine
+* Data Object Convert
+  * MapStruct
+* Helpers / Utils
+  * Lombok
+  * Hutool
+* API UI
+  * OpenAPI v3
+
 ## Unit Tests
-### Single Transaction APIs
-### Batch Transaction APIs
+### Single Transaction APIs / Batch Transaction APIs
+![Unit Test 01](/document_resources/unit_test_1.png)
 
 ## Stress Tests
 * Running on:
@@ -38,6 +72,12 @@ Please also check out [Swagger-UI](http://localhost:8000/swagger-ui/index.html#/
   * Crucial 4 * 8GB DRAM @ 3200 MHz (18-18-41-59)
   * ROG Strix X570-F Gaming
   * TOSHIBA HDWD130
+* Docker Resource Config
+  * 8C16T, 16G Memory
+### Batch Data Insert
+![Stress Test 01](/document_resources/stress_test_1.png)
+### Data Insert (50 Threads, 2500 qps)
+![Stress Test 02](/document_resources/stress_test_2.png)
 
 ## What could be improved
 * Deal with soft deletion: Using @SQLDelete or implement by self

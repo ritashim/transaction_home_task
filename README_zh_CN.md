@@ -26,16 +26,56 @@
 * 批量修改交易
 * 批量删除交易
 
-## 单元测试
-### 单交易操作接口
-### 批量操作接口
+## 运行
+### 依赖
+* Docker
+
+### 打包
+```sh
+mvn install
+```
+
+### 运行
+```sh
+docker run -p 8000:8000 transaction:0.0.1-SNAPSHOT
+```
+
+## 依赖
+* Spring
+  * Spring Boot Starter Web
+  * Validation
+  * Cache
+  * JPA
+  * Test
+* 持久化
+  * H2
+  * QueryDsl
+* 缓存
+  * Caffeine
+* 数据对象转换
+  * MapStruct
+* 工具类包
+  * Lombok
+  * Hutool
+* API展示界面
+  * OpenAPI v3
 
 ## 单元测试
+### Single Transaction APIs / Batch Transaction APIs
+![Unit Test 01](/document_resources/unit_test_1.png)
+
+## 压力测试
 * 运行环境：
     * AMD Ryzen 7 3800X @ 4.10GHz
     * Crucial 4 * 8GB DRAM @ 3200 MHz (18-18-41-59)
     * ROG Strix X570-F Gaming
     * TOSHIBA HDWD130
+* Docker容器资源
+  * 8C16T, 16G 内存
+### 瞬时数据插入
+![Stress Test 01](/document_resources/stress_test_1.png)
+### 大量线程数据插入
+![Stress Test 02](/document_resources/stress_test_2.png)
 
 ## 可以改进的点？
 * 使用 @SQLDelete 或者自己实现 ORM 层面的软删除处理
